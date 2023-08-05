@@ -9,15 +9,12 @@ function App() {
   const [number, setNumber] = useState("")
 
   console.log(name , mail , number)
-
-  function submitHandler(e){
-    e.preventDefault()
-    axios.post("http://localhost:3000/post" , {
-      name : name ,
-      mail : mail , 
-      number : number
-    })
-  }
+ function submitHandler (e) {
+  e.preventDefault()
+  axios.delete("http://localhost:3000/user:64cc7cf2deecca0592c1e025" , {
+   
+  })
+ }
 
   return (
     <form onSubmit={submitHandler}>

@@ -1,32 +1,49 @@
-import express from "express";
-import cors from "cors"; // Import the cors middleware
-import Connection from "./model/index.js";
-import User from "./model/schema.js";
+import express from "express"
+import cors from "cors"
+import User from "./models/userSchema.js"
+import Connection from "./models/index.js"
 
-const app = express();
 
-app.use(express.json());
-app.use(cors()); // Add the cors middleware to allow cross-origin requests
+const app = express()
+app.use(cors())
+app.use(express.json())
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+app.get("/" , async (req , res) => {
+    const user = await User.find()
+    res.send(user)
+})
 
-app.post("/post", async (req, res) => {
-  const { name, mail, number } = req.body;
-  try {
-    const user = new User({ name, mail, phone: number });
-    await user.save();
-    console.log("Data saved:", user);
-    res.send("data submitted");
-  } catch (error) {
-    console.error("Error saving data:", error);
-    res.status(500).send("Error occurred while saving data.");
-  }
-});
+app.post("/post" ,async (req , res) => {
+    try{
+        const {name , mail , number} = req.body
+        const user = new User({name , mail , number})
+        await user.save()
+        console.log("data saved " , user)
+
+    }
+
+    catch{
+        console.log("server error")
+    }
+
+   
+})
+
+app.delete("/user:id" , async (req , res) => {
+    try{
+        const {id} = req.params
+        const deleteUser = await User.findUserByIdAndDelete(id)
+        console.log("userDeleted" , deleteUser)
+        res.json(deleteUser)
+    }
+    catch (error) {
+        console.log("user not found " , error)
+    }
+})
 
 Connection.then(() => {
-  app.listen(3000, () => {
-    console.log("server started");
-  });
-});
+    app.listen(3000 , () => {
+    
+        console.log("server started at 3000")
+    })
+})
